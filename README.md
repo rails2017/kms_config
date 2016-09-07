@@ -1,8 +1,6 @@
 # KmsConfig
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/kms_config`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+KmsConfig adopts Heroku-style config management for any Rails application using AWS KMS to encrypt, S3 to store, and Rack middleware to inject environment variables.
 
 ## Installation
 
@@ -22,7 +20,27 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+We're using the same commands as the Heroku CLI. More here: [Heroku Config Vars](https://devcenter.heroku.com/articles/config-vars).
+
+### Setup
+
+`config init`
+
+### List Environment Variables (aka `heroku config`)
+
+`config`
+
+### Write Environment Variable (aka `heroku config:set`)
+
+`config set FOO=BAR`
+
+### Read Environment Variable (aka `heroku config:get`)
+
+`config get FOO`
+
+### Delete Environment Variable (aka `heroku config:unset`)
+
+`config unset FOO`
 
 ## Development
 
@@ -32,10 +50,9 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/kms_config. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/rails2017/kms_config. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
 
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-

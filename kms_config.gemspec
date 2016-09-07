@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Zane Shannon"]
   spec.email         = ["zcs@smileslaughs.com"]
 
-  spec.summary       = %q{}
-  spec.description   = %q{}
+  spec.summary       = %q{KmsConfig uses AWS KMS to configure a Rails application.}
+  spec.description   = %q{KmsConfig adopts Heroku-style config management for any Rails application using AWS KMS to encrypt, S3 to store, and Rack middleware to inject environment variables.}
   spec.homepage      = "https://github.com/rails2017/kms_config"
   spec.license       = "MIT"
 
@@ -26,6 +26,8 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
+
+  spec.add_dependency "aws-sdk", "~> 2"
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
