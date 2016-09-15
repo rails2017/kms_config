@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe KmsConfig do
+describe S3Config do
   it 'has a version number' do
-    expect(KmsConfig::VERSION).not_to be nil
+    expect(S3Config::VERSION).not_to be nil
   end
 
   it 'does something useful' do

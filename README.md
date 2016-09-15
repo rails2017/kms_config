@@ -1,13 +1,13 @@
-# KmsConfig
+# S3Config
 
-KmsConfig adopts Heroku-style config management for any Rails application using AWS KMS to encrypt, S3 to store, and Rack middleware to inject environment variables.
+S3Config adopts Heroku-style config management for any Rails application using AWS S3 to store, and Rack middleware to inject environment variables.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'kms_config'
+gem 's3_config'
 ```
 
 And then execute:
@@ -16,7 +16,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install kms_config
+    $ gem install s3_config
 
 ## Usage
 
@@ -50,7 +50,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/rails2017/kms_config. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/rails2017/s3_config. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
 
 
 ## License

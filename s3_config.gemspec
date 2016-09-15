@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'kms_config/version'
+require 's3_config/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "kms_config"
-  spec.version       = KmsConfig::VERSION
+  spec.name          = "s3_config"
+  spec.version       = S3Config::VERSION
   spec.authors       = ["Zane Shannon"]
   spec.email         = ["zcs@smileslaughs.com"]
 
-  spec.summary       = %q{KmsConfig uses AWS KMS to configure a Rails application.}
-  spec.description   = %q{KmsConfig adopts Heroku-style config management for any Rails application using AWS KMS to encrypt, S3 to store, and Rack middleware to inject environment variables.}
-  spec.homepage      = "https://github.com/rails2017/kms_config"
+  spec.summary       = %q{S3Config uses AWS S3 to configure a Rails application.}
+  spec.description   = %q{S3Config adopts Heroku-style config management for any Rails application using AWS S3 to store, and Rack middleware to inject environment variables.}
+  spec.homepage      = "https://github.com/rails2017/s3_config"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
