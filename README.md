@@ -24,23 +24,27 @@ We're using the same commands as the Heroku CLI. More here: [Heroku Config Vars]
 
 ### Setup
 
-`config init`
+`AWS_ACCESS_KEY_ID`, `AWS_ACCESS_KEY_SECRET`, and `S3_CONFIG_BUCKET` must be defined in your ENV.
+
+### List Environments
+
+`config environments`
 
 ### List Environment Variables (aka `heroku config`)
 
-`config`
+`config list ENVIRONMENT`
 
 ### Write Environment Variable (aka `heroku config:set`)
 
-`config set FOO=BAR`
+`config set ENVIRONMENT FOO=BAR`
 
 ### Read Environment Variable (aka `heroku config:get`)
 
-`config get FOO`
+`config get ENVIRONMENT FOO`
 
 ### Delete Environment Variable (aka `heroku config:unset`)
 
-`config unset FOO`
+`config unset ENVIRONMENT FOO`
 
 ## Development
 

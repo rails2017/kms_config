@@ -10,14 +10,6 @@ module S3Config
       @options = options.inject({}) { |m, (k, v)| m[k.to_sym] = v; m }
     end
 
-    def path
-      @options.fetch(:path) { default_path }.to_s
-    end
-
-    def path=(path)
-      @options[:path] = path
-    end
-
     def environment
       environment = @options.fetch(:environment) { default_environment }
       environment.nil? ? nil : environment.to_s
