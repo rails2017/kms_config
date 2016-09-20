@@ -18,13 +18,17 @@ Or install it yourself as:
 
     $ gem install s3_config
 
-## Usage
-
-We're using the same commands as the Heroku CLI. More here: [Heroku Config Vars](https://devcenter.heroku.com/articles/config-vars).
-
-### Setup
+## Setup
 
 `AWS_ACCESS_KEY_ID`, `AWS_ACCESS_KEY_SECRET`, and `S3_CONFIG_BUCKET` must be defined in your ENV.
+
+## Usage
+
+### In Rails
+
+S3Config adds a railtie callback `before_configuration` that pulls stored configuration variables from S3 just before the Rails application is configured (eg. `config/application.rb` executes).
+
+We're using the same commands as the Heroku CLI. More here: [Heroku Config Vars](https://devcenter.heroku.com/articles/config-vars).
 
 ### List Environments
 
