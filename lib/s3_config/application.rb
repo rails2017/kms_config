@@ -1,3 +1,4 @@
+require "aws-sdk"
 require "erb"
 require "yaml"
 
@@ -33,22 +34,36 @@ module S3Config
       configuration.each(&block)
     end
 
-    private
+    # private
 
-    def default_path
-      raise NotImplementedError
+    def client
+      @s3 ||= Aws::S3::Client.new(access_key_id: ::ENV.fetch("AWS_ACCESS_KEY_ID"), secret_access_key: ::ENV.fetch("AWS_ACCESS_KEY_SECRET"), region: ::ENV.fetch("AWS_REGION", "us-east-1"))
+    end
+
+    def bucket
+      @bucket ||= Aws::S3::Bucket.new(::ENV.fetch("S3_CONFIG_BUCKET"), client: client)
+    end
+
+    def default_version
+      @version ||= [(bucket.objects({prefix: "#{environment}/"}).count - 1), 0].max
     end
 
     def default_environment
-      nil
+      ::ENV["RACK_ENV"]
     end
 
     def raw_configuration
-      (@parsed ||= Hash.new { |hash, path| hash[path] = parse(path) })[path]
-    end
-
-    def parse(path)
-      File.exist?(path) && YAML.load(ERB.new(File.read(path)).result) || {}
+      if v = ::ENV.fetch("S3_CONFIG_REVISION"){ default_version } and e = environment
+        begin
+          yaml = bucket.object("#{e}/#{v}.yml").get.body
+          config = YAML.load yaml
+          config
+        rescue Aws::S3::Errors::NoSuchKey
+          raise ConfigNotDefinedError.new(e, v) 
+        end
+      else
+        throw NotImplementedError
+      end
     end
 
     def global_configuration

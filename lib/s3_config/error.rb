@@ -14,4 +14,10 @@ module S3Config
       super("Missing required configuration keys: #{keys.inspect}")
     end
   end
+
+  class ConfigNotDefinedError < Error
+    def initialize(environment, version)
+      super("No version '#{version}' defined for environment '#{environment}'!")
+    end
+  end
 end
