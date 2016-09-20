@@ -57,7 +57,7 @@ module S3Config
         begin
           yaml = bucket.object("#{e}/#{v}.yml").get.body
           config = YAML.load yaml
-          config
+          return config
         rescue Aws::S3::Errors::NoSuchKey
           if default_environment.nil? or default_environment == 'development'
             warn "No config defined. Ignoring because environment = #{default_environment.to_s}"
@@ -68,6 +68,7 @@ module S3Config
       else
         throw NotImplementedError
       end
+      {}
     end
 
     def global_configuration
