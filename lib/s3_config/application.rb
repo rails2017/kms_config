@@ -53,11 +53,12 @@ module S3Config
     end
 
     def raw_configuration
+      return @config unless @config.nil?
       if v = ::ENV.fetch("S3_CONFIG_REVISION"){ default_version } and e = environment
         begin
           yaml = bucket.object("#{e}/#{v}.yml").get.body
-          config = YAML.load yaml
-          return config
+          @config = YAML.load yaml
+          return @config
         rescue Aws::S3::Errors::NoSuchKey
           if default_environment.nil? or default_environment == 'development'
             warn "No config defined. Ignoring because environment = #{default_environment.to_s}"
@@ -68,7 +69,7 @@ module S3Config
       else
         throw NotImplementedError
       end
-      {}
+      @config ||= {}
     end
 
     def global_configuration
