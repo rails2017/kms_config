@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require "s3_config"
 require "s3_config/cli"
 
 S3Config::CLI.start

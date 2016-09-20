@@ -11,6 +11,10 @@ module S3Config
       @options = options.inject({}) { |m, (k, v)| m[k.to_sym] = v; m }
     end
 
+    def environments
+      bucket.objects.map(&:key).map{|key| key.split('/').first }.uniq
+    end
+
     def environment
       environment = @options.fetch(:environment) { default_environment }
       environment.nil? ? nil : environment.to_s
@@ -20,13 +24,22 @@ module S3Config
       @options[:environment] = environment
     end
 
+    def version
+      version = @options.fetch(:version) { default_version }
+      version
+    end
+
+    def version=(version)
+      @options[:version] = version
+    end
+
     def configuration
-      global_configuration.merge(environment_configuration)
+      @configuration ||= read_configuration
     end
 
     def load
       each do |key, value|
-        skip?(key) ? key_skipped!(key) : set(key, value)
+        skip?(key) ? key_skipped!(key) : graduate_to_env(key, value)
       end
     end
 
@@ -34,7 +47,36 @@ module S3Config
       configuration.each(&block)
     end
 
-    # private
+    def valid?
+      !client.nil? and !bucket.nil?
+    end
+
+    def latest_version
+      [(bucket.objects({prefix: "#{environment}/"}).count - 1), 0].max
+    end
+
+    def read(key)
+      config = read_configuration
+      config[key]
+    end
+
+    def write(key, value)
+      config = read_configuration
+      unless config[key] == value
+        config[key] = value
+        write_configuration config
+      end
+    end
+
+    def delete(key)
+      config = read_configuration
+      unless config[key].nil?
+        config.delete key
+        write_configuration config
+      end
+    end
+
+    private
 
     def client
       @s3 ||= Aws::S3::Client.new(access_key_id: ::ENV.fetch("AWS_ACCESS_KEY_ID"), secret_access_key: ::ENV.fetch("AWS_ACCESS_KEY_SECRET"), region: ::ENV.fetch("AWS_REGION", "us-east-1"))
@@ -44,43 +86,43 @@ module S3Config
       @bucket ||= Aws::S3::Bucket.new(::ENV.fetch("S3_CONFIG_BUCKET"), client: client)
     end
 
-    def default_version
-      @version ||= [(bucket.objects({prefix: "#{environment}/"}).count - 1), 0].max
-    end
-
     def default_environment
-      ::ENV["RACK_ENV"]
+      nil
     end
 
-    def raw_configuration
-      return @config unless @config.nil?
-      if v = ::ENV.fetch("S3_CONFIG_REVISION"){ default_version } and e = environment
+    def default_version
+      @default_version ||= ::ENV.fetch("S3_CONFIG_REVISION"){ latest_version }
+    end
+
+    def read_configuration
+      if e = environment and v = version
         begin
-          yaml = bucket.object("#{e}/#{v}.yml").get.body
-          @config = YAML.load yaml
-          return @config
+          serialized_config = bucket.object("#{e}/#{v}.yml").get.body
+          config = YAML.load serialized_config
+          return config
         rescue Aws::S3::Errors::NoSuchKey
-          if default_environment.nil? or default_environment == 'development'
-            warn "No config defined. Ignoring because environment = #{default_environment.to_s}"
-          else
-            raise ConfigNotDefinedError.new(e, v)
-          end
+          raise ConfigNotDefinedError.new(e, v)
         end
       else
         throw NotImplementedError
       end
-      @config ||= {}
+      {}
     end
 
-    def global_configuration
-      raw_configuration.reject { |_, value| value.is_a?(Hash) }
+    def write_configuration(config)
+      if e = environment and next_version = (latest_version + 1)
+        serialized_config = YAML.dump(config)
+        bucket.put_object({
+          body: serialized_config,
+          key: "#{e}/#{next_version}.yml",
+          server_side_encryption: "AES256"
+        })
+      else
+        throw NotImplementedError
+      end
     end
 
-    def environment_configuration
-      raw_configuration[environment] || {}
-    end
-
-    def set(key, value)
+    def graduate_to_env(key, value)
       non_string_configuration!(key) unless key.is_a?(String)
       non_string_configuration!(value) unless value.is_a?(String) || value.nil?
 
