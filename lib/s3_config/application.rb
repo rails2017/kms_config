@@ -59,7 +59,11 @@ module S3Config
           config = YAML.load yaml
           config
         rescue Aws::S3::Errors::NoSuchKey
-          raise ConfigNotDefinedError.new(e, v) 
+          if default_environment.nil? or default_environment == 'development'
+            warn "No config defined. Ignoring because environment = #{default_environment.to_s}"
+          else
+            raise ConfigNotDefinedError.new(e, v)
+          end
         end
       else
         throw NotImplementedError
