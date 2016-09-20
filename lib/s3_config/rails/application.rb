@@ -1,6 +1,6 @@
 module S3Config
   module Rails
-    class Application < Figaro::Application
+    class Application < S3Config::Application
       private
 
       def default_environment
