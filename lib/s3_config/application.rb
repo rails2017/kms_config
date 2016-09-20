@@ -51,8 +51,12 @@ module S3Config
       !client.nil? and !bucket.nil?
     end
 
+    def versions_count
+      bucket.objects({prefix: "#{environment}/"}).count
+    end
+
     def latest_version
-      [(bucket.objects({prefix: "#{environment}/"}).count - 1), 0].max
+      [versions_count - 1, 0].max
     end
 
     def read(key)
@@ -61,7 +65,11 @@ module S3Config
     end
 
     def write(key, value)
-      config = read_configuration
+      begin
+        config = read_configuration
+      rescue ConfigNotDefinedError
+        config = {}
+      end
       unless config[key] == value
         config[key] = value
         write_configuration config
@@ -110,7 +118,7 @@ module S3Config
     end
 
     def write_configuration(config)
-      if e = environment and next_version = (latest_version + 1)
+      if e = environment and next_version = versions_count
         serialized_config = YAML.dump(config)
         bucket.put_object({
           body: serialized_config,
