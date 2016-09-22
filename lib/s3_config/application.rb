@@ -79,7 +79,7 @@ module S3Config
     private
 
     def client
-      @s3 ||= Aws::S3::Client.new(access_key_id: ::ENV.fetch("AWS_ACCESS_KEY_ID"), secret_access_key: ::ENV.fetch("AWS_ACCESS_KEY_SECRET"), region: ::ENV.fetch("AWS_REGION", "us-east-1"))
+      @s3 ||= Aws::S3::Client.new(region: ::ENV.fetch("AWS_REGION", "us-east-1"))
     end
 
     def bucket

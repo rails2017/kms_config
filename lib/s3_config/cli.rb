@@ -9,7 +9,7 @@ module S3Config
       def validate_installed!
         unless S3Config.adapter.new.valid?
           error "Not installed!"
-          error "`AWS_ACCESS_KEY_ID`, `AWS_ACCESS_KEY_SECRET`, and `S3_CONFIG_BUCKET` must be defined in your ENV."
+          error "`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `S3_CONFIG_BUCKET` must be defined in your ENV."
           false
         else
           true

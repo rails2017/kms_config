@@ -20,7 +20,7 @@ Or install it yourself as:
 
 ## Setup
 
-`AWS_ACCESS_KEY_ID`, `AWS_ACCESS_KEY_SECRET`, and `S3_CONFIG_BUCKET` must be defined in your ENV.
+`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `S3_CONFIG_BUCKET` must be defined in your ENV.
 
 ## Usage
 
