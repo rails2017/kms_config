@@ -43,9 +43,13 @@ module S3Config
         return
       end
       @application = S3Config.adapter.new environment: environment
+      version = @application.latest_version
       @application.write key, value
       say "Set #{key}=#{value} (#{environment})"
       say "====="
+      if @application.latest_version != version
+        say "New version: v#{@application.latest_version}"
+      end
       say "Use version: v#{@application.latest_version}"
     end
 
@@ -69,9 +73,13 @@ module S3Config
       return error "Key required. eg: config unset production KEY" if key.nil?
       key = key.upcase
       @application = S3Config.adapter.new environment: environment
+      version = @application.latest_version
       @application.delete key
       say "Removed #{key} (#{environment})"
       say "====="
+      if @application.latest_version != version
+        say "New version: v#{@application.latest_version}"
+      end
       say "Use version: v#{@application.latest_version}"
     end
 
