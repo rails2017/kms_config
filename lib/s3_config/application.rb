@@ -52,7 +52,11 @@ module S3Config
     end
 
     def versions_count
-      bucket.objects({prefix: "#{environment}/"}).count
+      begin
+        bucket.objects({prefix: "#{environment}/"}).count
+      rescue S3Config::ConfigNotDefinedError => e
+        rescue ConfigNotDefinedError
+      end
     end
 
     def latest_version
