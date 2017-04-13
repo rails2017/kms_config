@@ -4,7 +4,7 @@ module S3Config
       config.before_configuration do
         begin
           S3Config.load
-        rescue S3Config::ConfigNotDefinedError => e
+        rescue Aws::Errors::MissingCredentialsError, S3Config::ConfigNotDefinedError => e
           if ::Rails.env.development?
             warn "S3Config not defined. Ignoring for development environment."
           else
