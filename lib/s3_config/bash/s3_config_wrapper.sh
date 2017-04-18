@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # Check that the environment variable has been set correctly
-if [ -z "$SECRETS_BUCKET_NAME" ]; then
-  echo >&2 'error: missing SECRETS_BUCKET_NAME environment variable'
+if [ -z "$S3_CONFIG_BUCKET" ]; then
+  echo >&2 'error: missing S3_CONFIG_BUCKET environment variable'
   exit 1
 fi
-if [ -z "$SECRETS_ENVIRONMENT" ]; then
-  echo >&2 'error: missing SECRETS_ENVIRONMENT environment variable'
+if [ -z "$S3_CONFIG_ENVIRONMENT" ]; then
+  echo >&2 'error: missing S3_CONFIG_ENVIRONMENT environment variable'
   exit 1
 fi
-if [ -z "$SECRETS_VERSION" ]; then
-  echo >&2 'error: missing SECRETS_VERSION environment variable'
+if [ -z "$S3_CONFIG_REVISION" ]; then
+  echo >&2 'error: missing S3_CONFIG_REVISION environment variable'
   exit 1
 fi
 
@@ -18,7 +18,7 @@ fi
 function load_config {
   local prefix=""
   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
-  aws s3 cp s3://${SECRETS_BUCKET_NAME}/${SECRETS_ENVIRONMENT}/${SECRETS_VERSION}.yml - |
+  aws s3 cp s3://${S3_CONFIG_BUCKET}/${S3_CONFIG_ENVIRONMENT}/${S3_CONFIG_REVISION}.yml - |
   sed -ne "s|^\($s\):|\1|" \
       -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
       -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p" |
