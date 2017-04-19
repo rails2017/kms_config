@@ -34,6 +34,3 @@ function load_config {
   sed 's/^/export /'
 }
 eval $(load_config)
-
-# Run the entrypoint
-eval "$@"
