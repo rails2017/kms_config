@@ -31,21 +31,23 @@ module S3Config
     end
 
     desc "set", "Set S3Config variable for environment. eg: config set production KEY=value"
-    def set(environment=nil, key_value="")
+    def set(environment=nil, *key_values)
       return unless validate_installed!
       return error "Environment required. eg: config set production KEY=value" if environment.nil?
-      key, value = key_value.split '='
-      return error "Key required. eg: config set production KEY=value" if key.nil?
-      key.upcase!
-      if value.nil?
-        error "Value required. eg: config set production KEY=value"
-        say "Use `config unset` to delete a key"
-        return
-      end
       @application = S3Config.adapter.new environment: environment
       version = @application.latest_version
-      @application.write key, value
-      say "Set #{key}=#{value} (#{environment})"
+      key_values.each do |key_value|
+        key, value = key_value.split '='
+        return error "Key required. eg: config set production KEY=value" if key.nil?
+        key.upcase!
+        if value.nil?
+          error "Value required. eg: config set production KEY=value"
+          say "Use `config unset` to delete a key"
+          return
+        end
+        @application.write key, value
+        say "Set #{key}=#{value} (#{environment})"
+      end
       say "====="
       if @application.latest_version != version
         say "New version: v#{@application.latest_version}"
