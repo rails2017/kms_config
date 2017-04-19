@@ -25,7 +25,7 @@ module S3Config
       version = @application.latest_version
       say "#{environment} (v#{version})"
       say "====="
-      @application.each do |k,v|
+      @application.sort.each do |k,v|
         say "#{k}=#{v}"
       end
     end
