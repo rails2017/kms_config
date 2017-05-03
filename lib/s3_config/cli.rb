@@ -69,15 +69,17 @@ module S3Config
     end
 
     desc "unset", "Remove S3Config variable for environment. eg: config unset production KEY"
-    def unset(environment=nil, key=nil)
+    def unset(environment=nil, *key_values)
       return unless validate_installed!
       return error "Environment required. eg: config unset production KEY" if environment.nil?
-      return error "Key required. eg: config unset production KEY" if key.nil?
-      key = key.upcase
+      return error "Key required. eg: config unset production KEY" if key_values.empty?
       @application = S3Config.adapter.new environment: environment
       version = @application.latest_version
-      @application.delete key
-      say "Removed #{key} (#{environment})"
+      key_values.each do |key|
+        key = key.upcase
+        @application.delete key
+        say "Removed #{key} (#{environment})"
+      end
       say "====="
       if @application.latest_version != version
         say "New version: v#{@application.latest_version}"

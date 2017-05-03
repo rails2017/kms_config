@@ -103,7 +103,7 @@ module S3Config
     end
 
     def default_version
-      @default_version ||= ::ENV.fetch("S3_CONFIG_REVISION"){ latest_version }
+      @default_version = ::ENV.fetch("S3_CONFIG_REVISION"){ latest_version }
     end
 
     def read_configuration
